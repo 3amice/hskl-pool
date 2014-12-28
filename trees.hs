@@ -12,10 +12,8 @@ instance Functor Tree where
 
 instance Applicative Tree where
   pure  = Leaf
-  (Leaf f)   <*> (Leaf x)   = Leaf (f x)
-  (Leaf f)   <*> (Node x y) = fmap f (Node x y)
-  (Node (Leaf f) (Leaf g)) <*> (Leaf x) = Node (fmap f (Leaf x)) (fmap g (Leaf x))
-  (Node f g) <*> (Node x y) = Node (Node (f <*> x) (f <*> y)) (Node (g <*> x) (g <*> y))
+  (Leaf f) <*> other = fmap f other
+  (Node f g) <*> other = Node (f <*> other) (g <*> other)
 
 instance (Show a) => Show (Tree a) where
   show (Leaf a)   = "(" ++ show a ++")"
