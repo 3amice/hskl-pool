@@ -1,0 +1,128 @@
+1.
+  first:
+    f x = (5-x) / 3
+    f x = (/3) $ (5-x)
+    f   = (/3) . (5-)
+  second:
+    f x y = (5 - x) / y
+    f x y = (/y) . (5-x)
+    f     = (/) . (5-)
+
+2. 
+  since x and y are `lifted` in do-notation they must be of type (m a)
+  and since they are both called as an argument to (*) they must be of
+  the Num type-class.
+
+  so, 
+  
+    f :: (Num a, Monad m) => m a -> m a -> m a
+
+  .
+
+    f [1,2,3] [2,4,8]
+
+  is pretty much equivalent to 
+
+    (*) <$> [1,2,3] <*> [2,4,8]
+  
+  or 
+
+    [1,2,3] >>= (\x -> [2,4,8] >>= (\y -> return $ x * y))
+
+  which should return:
+    
+    [2,4,8,4,8,16,6,12,24]
+
+  .
+
+    f (Just 3) (Nothing)
+
+  Should return
+
+    Nothing
+
+  (see first example).
+
+
+3. (Short)  Functions take 1 parameter, functions can be partially applied.
+
+4. (Short) Requires argument to replicate to implement typeclass enum.
+  better:
+    replicate = flip ((flip take) . repeat)
+  ok:
+    replicate n x = take n $ repeat x
+
+5. 
+  write down types of all functions occuring:
+
+    zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+    map :: (a -> b) -> [a] -> [b]
+    (.) :: (b -> c) -> (a -> b) -> (a -> c)
+
+  a)
+    zipWith map
+
+  do substitutions:
+
+    zipWith map :: [(a->b)] -> [[a]] -> [[b]]
+     
+  b) 
+
+    map zipWith 
+
+  do substitution in map:
+
+    a : ((a -> b -> c)) 
+    ->
+    b : [a] -> [b] -> [c]
+
+  which results in: 
+
+    map zipWith :: [a->b->c] -> [[a] -> [b] -> [c]]
+
+  c) (unsure)
+  
+    map . zipWith
+
+  is equivalent to:
+
+    (.) map zipWith
+
+  do substitution
+
+    (b -> c): (a -> b) -> [a] -> [b]
+  
+  meaning that
+
+    b: (a->b)
+    ->
+    c: ([a] -> [b])
+
+  and 
+
+    zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+    (a -> b): (a -> b -> c) -> ([a] -> [b] -> [c])
+
+  meaning that
+
+    a: (a -> b -> c)
+    ->
+    b: ([a] -> [b] -> [c])
+
+  giving:
+  map . zipWith :: (a -> b -> c) -> [[a]] -> [[b -> c]]
+
+
+6.
+  check foldr.com and foldl.com
+  what makes sense?
+  foldl (+) [1..] 1: ((...)+1)+1 = ∞ 
+  or 
+  foldr (+) [1..] 1: 1+(1+(...)) = ∞
+
+  foldr can operate on infinite lists... (look above)
+
+  foldr :: (a -> b -> b) -> b -> [a] -> b
+  foldl :: (b -> a -> b) -> b -> [a] -> b
+
+  map' f = foldr (\x y -> f x : y) []
