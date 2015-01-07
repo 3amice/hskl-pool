@@ -17,9 +17,10 @@ import Data.List
  -}
 
 cseq x = (!!) (map (cseq') [1..]) (x-1)
-cseq' 1 = [1]
-cseq' n 
-  | n `mod` 2 == 0  = n : cseq (n `div` 2)
-  | otherwise       = n : cseq (3 * n + 1)
+  where
+    cseq' 1 = [1]
+    cseq' n 
+      | n `mod` 2 == 0  = n : cseq (n `div` 2)
+      | otherwise       = n : cseq (3 * n + 1)
 
 sol = maximumBy (comparing length) (map cseq [1..999999])
