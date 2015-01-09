@@ -104,8 +104,22 @@ which means a solution could be:
 
 6. (WIP)
 
->  data Tree = Leaf Int | Node Int Tree Tree deriving Show
+>data Tree = Leaf Int | Node Int Tree Tree deriving Show
 
-subTree :: Tree -> Tree -> Bool
-subTree (Leaf a) (Leaf b) == a == b
-subTree (Node a l r) (
+>subTree :: Tree -> Tree -> Bool
+>subTree (Leaf _) (Node _ _ _) = False
+>subTree (Leaf a) (Leaf b) = a == b
+>subTree (Node _ l r) l2@(Leaf a) = subTree l l2 ||Tree r l2
+>subTree (Node a l1 r1) n2@(Node b l2 r2) = 
+  ((a == b) && (subTree l1 l2) && (subTree r1 r2)) 
+  || subTree l1 n2 
+  || subTree r1 n2
+
+>treeA = (Node 1 (Leaf 2) (Leaf 3))
+>treeB = (Node 1 (Leaf 2) (Leaf 3))
+
+>treeC = Leaf 3
+>treeD = (Node 1 (Leaf 5) (treeA))
+
+
+
