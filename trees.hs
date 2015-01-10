@@ -1,5 +1,6 @@
 import Control.Applicative
 import Data.Foldable
+import Data.Monoid
 data Tree a = Leaf a | Node (Tree a) (Tree a) deriving Eq
 
 instance Monad Tree where 
@@ -7,9 +8,10 @@ instance Monad Tree where
   (Leaf t)   >>= f = f t
   (Node l r) >>= f = Node (l >>= f) (r >>= f)
 
+
 instance Foldable (Tree) where
-  foldr f z (Leaf t) = f t z
-  foldr f z (Node a b) = foldr (foldr f a z) (f b)
+  foldMap f (Leaf a) = f a
+  foldMap f (Node l r) = foldMap f l `mappend` foldMap f r
 
 instance Functor Tree where
   fmap f (Leaf t)   = Leaf (f t)
