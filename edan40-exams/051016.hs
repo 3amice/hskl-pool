@@ -54,8 +54,7 @@ e k = do -- takes a paremeter k
 -- which can be cleant up to (remove parans and resolve namespace conflicts)
 -- ($)($) :: (a -> b) -> a -> b
 -- which is the exact same as ($)
--- so 
--- ($)$($) :: (a -> b) -> a -> b
+-- so -- ($)$($) :: (a -> b) -> a -> b
 --f) 
 -- resolve the types first.
 -- [] :: [a] -- but do note that this is the list monad
@@ -65,5 +64,7 @@ e k = do -- takes a paremeter k
 -- ([]>>=)(\_->[(>=)]) :: Ord a => [a -> a -> Bool]
 
 {-- 5 --}
--- 
+-- WIP
 
+{-- 6 --}
+-- WIP

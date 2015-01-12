@@ -6,9 +6,9 @@
 applyPlusOne f = (+1) . f
 
 {-- 2 --}
--- because it requires Num
+-- because it requires Enum
 -- better below:
-replicate' = (flip take) . repeat
+replicate' = flip ((flip take) . repeat)
 
 {-- 3 --}
 -- the types are:
